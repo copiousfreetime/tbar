@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'test_helper'
 require 'tbar'
 
 describe Tbar::VERSION do
