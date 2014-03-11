@@ -20,6 +20,13 @@ module Tbar
       assert_equal :euro, Tbar::Entry.default_commodity
       e = Tbar::Entry.new( :account => "bar", :amount => 123 )
       assert_equal  :euro, e.commodity
+      Tbar::Entry.default_commodity = :usd
+      assert_equal :usd, Tbar::Entry.default_commodity
+    end
+
+    def test_raises_error_when_type_is_called
+      e = Tbar::Entry.new( :account => 'foo', :amount => 123 )
+      assert_raises( NotImplementedError ) { e.type }
     end
 
   end
