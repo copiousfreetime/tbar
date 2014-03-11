@@ -17,6 +17,7 @@ module Tbar
 
     def test_default_commodity_is_used_in_entries
       Tbar::Entry.default_commodity = :euro
+      assert_equal :euro, Tbar::Entry.default_commodity
       e = Tbar::Entry.new( :account => "bar", :amount => 123 )
       assert_equal  :euro, e.commodity
     end
