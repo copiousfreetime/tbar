@@ -4,9 +4,10 @@ module Tbar
   # account to another. 
   #
   # A Transaction must have at least 1 debit and 1 credit entry, and the sum of
-  # the ammounts of the credits and the sum of the ammounts of the credits must
+  # the ammounts of the credits and the amount of the ammounts of the credits must
   # be equal.
   class Transaction
+    class InvalidTransactionError < ::Tbar::Error; end
 
     attr_reader :date
     attr_reader :payee
@@ -31,11 +32,19 @@ module Tbar
       @payee   = kwargs.fetch( :payee, "" )
     end
 
+    def credit_amount
+      sum( credits )
+    end
+
+    def debit_amount
+      sum( debits )
+    end
+
     # Public: validate the transaction, raising InvalidTransactionError if it is
     # not valid
     def valid!
       raise InvalidTransactionError, "Must have at least 1 debit and 1 credit entry" if credits.empty? || debits.empty?
-      raise InvalidTransactionError, "Credits (#{credit_sum}) and Debit(#{debit_sum}) must be equivalent" unless credit_sum == debit_sum
+      raise InvalidTransactionError, "Credits (#{credit_amount}) and Debit(#{debit_amount}) must be equivalent" unless credit_amount == debit_amount
     end
 
     # Public: return true or false based upon the validity of the Transaction
@@ -44,6 +53,12 @@ module Tbar
       return true
     rescue InvalidTransactionError
       return false
+    end
+
+    private
+
+    def sum( entry_list )
+      entry_list.reduce(0) { |memo, entry| memo += entry.amount }
     end
 
   end
