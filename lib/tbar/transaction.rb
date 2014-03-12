@@ -32,10 +32,12 @@ module Tbar
       @payee   = kwargs.fetch( :payee, "" )
     end
 
+    # Public: Sum all the Credits in the transaction
     def credit_amount
       sum( credits )
     end
 
+    # Public: Sum all the debits in the transaction
     def debit_amount
       sum( debits )
     end

@@ -4,10 +4,10 @@ require 'tbar/transaction'
 module Tbar
   class TransactionTest < ::Minitest::Test
     def setup
-      @debit   = ::Minitest::Mock.new.expect( :amount, 123 )
-      @credit  = ::Minitest::Mock.new.expect( :amount, 123 )
-      @credits = [ 111, 222, 333 ].map { |x| ::Minitest::Mock.new.expect( :amount, x ) }
-      @debits  = [ 111, 222, 333 ].map { |x| ::Minitest::Mock.new.expect( :amount, x ) }
+      @debit   = Debit.new( :account => :foo, :amount => 123 )
+      @credit  = Credit .new( :account => :foo, :amount => 123 )
+      @credits = [ 111, 222, 333 ].map { |x| Credit.new( :account => "#{x}", :amount => x ) }
+      @debits  = [ 111, 222, 333 ].map { |x| Debit.new( :account => "#{x}", :amount => x ) }
     end
 
     def test_validty_requires_debit
