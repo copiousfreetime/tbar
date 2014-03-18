@@ -64,6 +64,11 @@ Telephone, water, electricity, repairs, salaries, wages, depreciation, bad
 debts, stationery, entertainment, honorarium, rent, fuel, etc.
 
 
+1. What is the value of the transaction in terms of dollars (how much money changed
+   hands)?
+2. Where did the money go - What was gained or paid for by the exchange?
+3. Where did the money come from - what is the source of the money in this
+   exchange?
 
 # Structure of a transaction
 
@@ -93,7 +98,7 @@ debts, stationery, entertainment, honorarium, rent, fuel, etc.
 * Amount
 * Commodity (typically USD$)
 * Note
-* State
+* State - what is this? Closed or not?
 * Tags
 * Metadata
 
@@ -105,7 +110,7 @@ debts, stationery, entertainment, honorarium, rent, fuel, etc.
 
 ## Account
 * Number
-* Name
+* Name / Description
 * Type - Asset, Liability, Equity, Expenese, Revenue
 * Cash Account Y/N
 * Balance Sheet Account Y/N - mutual exclusivewith P&L account
