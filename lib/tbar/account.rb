@@ -34,6 +34,29 @@ module Tbar
       return child
     end
 
+    # Public: Create a child path of accounts.
+    #
+    # Create a lineage of accounts, below this account.
+    #
+    # names - an array of names, each name is the account name of that path
+    #         componenet
+    #
+    # Example:
+    #   expenses = Account.expenses
+    #   expenses.create_child_path( [ 'Banking', 'Service Fee' ] )
+    #
+    # Returns nothing
+    def create_child_path( names )
+      components = names.dup
+      parent     = self
+
+      loop do
+        break if components.empty?
+        child  = components.shift
+        parent = parent.create_child( child )
+      end
+    end
+
     # Public: Is the current Account a leaf account?
     #
     def leaf?

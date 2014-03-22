@@ -27,9 +27,16 @@ module Tbar
     def test_depth
       a = Account.new( :name => 'root', :type => Tbar::AccountType::ASSET )
       c1 = a.create_child( 'child1' )
-      c2 = a.create_child( 'child2' )
-      l1 = c1.create_child( 'leaf1' )
+      a.create_child( 'child2' )
+      c1.create_child( 'leaf1' )
       assert_equal 3, a.depth
+    end
+
+    def test_create_child_tree
+      a = Account.new( :name => 'root', :type => Tbar::AccountType::ASSET )
+      a.create_child_path( %w[ child grandchild leaf ] )
+      assert_equal 4, a.depth
+      assert_equal 4, a.size
     end
   end
 end
