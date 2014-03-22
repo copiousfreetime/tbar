@@ -9,6 +9,9 @@ module Tbar
 
     def test_add_account
       assert_equal 5, @chart.size
+      @chart.add_account( 'Expenses/Banking/Service Fee' )
+      assert_equal 3, @chart.depth
+      assert_equal 7, @chart.size
     end
   end
 end

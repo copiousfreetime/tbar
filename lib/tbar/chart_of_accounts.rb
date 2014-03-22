@@ -50,13 +50,17 @@ module Tbar
     #        final account name. The components of the path are separated by
     #        the `path_separator` string.
     def add_account( path )
-      add_account_component( path.split( path_separator ) )
+      chart.add_child_path( path.split( path_separator ) )
     end
-
 
     # Public: The number of Accounts in the chart
     def size
-      groups.map(&:size).reduce(:+)
+      chart.size
+    end
+
+    # Public: The depth of the Account tree in the chart
+    def depth
+      chart.depth
     end
 
     # Internal:
