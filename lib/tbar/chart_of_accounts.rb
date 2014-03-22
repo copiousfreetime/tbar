@@ -1,5 +1,6 @@
 require 'tbar/account'
 require 'tbar/account_type'
+require 'tbar/account_group'
 module Tbar
   # Public: The container holding the entire chart of accounts
   #
@@ -26,7 +27,10 @@ module Tbar
       { :path_separator => "/" }
     end
 
-    attr_reader :groups
+    # Internal
+    attr_reader :chart
+
+    # Internal
     attr_reader :options
 
     # Public: Create a new Chart of Accounts
@@ -35,8 +39,9 @@ module Tbar
     #          by default this is ChartOfAccounts.default_groups
     # options - the configuration options for the Chart of Accounts
     def initialize( kwargs = {} )
-      @groups  = kwargs.fetch( :groups, ChartOfAccounts.default_groups )
-      @options = kwargs.fetch( :options, ChartOfAccounts.default_options )
+      groups     = kwargs.fetch( :groups, ChartOfAccounts.default_groups )
+      @chart     = AccountGroup.new( :name => 'Chart of Accounts', :children => groups )
+      @options   = kwargs.fetch( :options, ChartOfAccounts.default_options )
     end
 
     # Public: Add a new account with the given path.

@@ -104,7 +104,7 @@ module Tbar
     # Return the tree depth of this account. This is the number of levels of
     # accounts, including this account
     def depth
-      children_depth + 1
+      children_depth + my_depth
     end
 
     # Internal: The maximum depth of all the children
@@ -116,7 +116,7 @@ module Tbar
     #
     # Returns Number
     def size
-      children_size + 1
+      children_size + my_size
     end
 
     # Internal: Return the nuber of accounts in the children
@@ -124,6 +124,22 @@ module Tbar
     # Returns Integer
     def children_size
       leaf? ? 0 : children.map(&:size).reduce(:+)
+    end
+
+    protected
+
+    # Internal
+    #
+    # The amount this node adds to the size calculation
+    def my_size
+      1
+    end
+
+    # Internal
+    #
+    # The amount this node adds to the depth calculation
+    def my_depth
+      1
     end
 
     # Public: Create a top level Asset Account

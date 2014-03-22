@@ -1,5 +1,9 @@
 module Tbar
   class AccountType
+    class GroupType < AccountType; end
+
+    GROUP     = GroupType.new
+
     class DebitType < AccountType
       def increasing; :credit end
       def decreasing; :dedit end
@@ -12,11 +16,11 @@ module Tbar
       def type; increasing; end
     end
 
-    ASSET     = DebitType
-    LIABILITY = CreditType
-    REVENUE   = CreditType
-    EXPENSE   = DebitType
-    EQUITY    = CreditType
+    ASSET     = DebitType.new
+    LIABILITY = CreditType.new
+    REVENUE   = CreditType.new
+    EXPENSE   = DebitType.new
+    EQUITY    = CreditType.new
 
     def self.debits
       [ ASSET, EXPENSE ]
