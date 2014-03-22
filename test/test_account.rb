@@ -32,6 +32,12 @@ module Tbar
       assert_equal 3, a.depth
     end
 
+    def test_name_and_type_are_equal
+      a1 = Account.new( :name => 'foo', :type => Tbar::AccountType::EXPENSE )
+      a2 = Account.new( :name => 'foo', :type => Tbar::AccountType::EXPENSE )
+      assert(a1 == a2)
+    end
+
     def test_create_child_tree
       a = Account.new( :name => 'root', :type => Tbar::AccountType::ASSET )
       a.create_child_path( %w[ child grandchild leaf ] )

@@ -18,6 +18,14 @@ module Tbar
       @children = kwargs.fetch( :children, Array.new )
     end
 
+    # Public: equivalence
+    #
+    # Two accounts are considered equivalent if their names and types are the
+    # same.
+    def ==(other)
+      (other.name == name) && (other.type == type)
+    end
+
     # Public: Is the current Account a root account?
     #
     def root?
