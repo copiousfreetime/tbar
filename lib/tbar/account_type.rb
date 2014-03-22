@@ -14,7 +14,7 @@ module Tbar
 
     ASSET     = DebitType
     LIABILITY = CreditType
-    INCOME    = CreditType 
+    REVENUE   = CreditType
     EXPENSE   = DebitType
     EQUITY    = CreditType
 
@@ -23,7 +23,7 @@ module Tbar
     end
 
     def self.credits
-      [ LIABILITY, INCOME, EQUITY ]
+      [ LIABILITY, REVENUE, EQUITY ]
     end
 
     def self.all
