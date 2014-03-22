@@ -53,5 +53,30 @@ module Tbar
     def children_size
       leaf? ? 0 : children.map(&:size).reduce(:+)
     end
+
+    # Public: Create a top level Asset Account
+    def self.assets
+      Account.new( :name => 'Assets', :type => AccountType::ASSET )
+    end
+
+    # Public: Create a top level Liabilities Account
+    def self.liabilities
+      Account.new( :name => 'Liabilities', :type => AccountType::LIABILITY )
+    end
+
+    # Public: Create a top level Revenue Account
+    def self.revenue
+      Account.new( :name => 'Revenue', :type => AccountType::REVENUE )
+    end
+
+    # Public: Create a top level expenses Account
+    def self.expenses
+      Account.new( :name => 'Expenses', :type => AccountType::EXPENSE )
+    end
+
+    # Public: Create a top level Equity Account
+    def self.equity
+      Account.new( :name => 'Equity', :type => AccountType::EQUITY)
+    end
   end
 end
