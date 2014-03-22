@@ -40,5 +40,18 @@ module Tbar
       children.empty?
     end
 
+    # Public: The number of accounts and sub accounts in this account
+    #
+    # Returns Number
+    def size
+      children_size + 1
+    end
+
+    # Internal: Return the nuber of accounts in the children
+    #
+    # Returns Integer
+    def children_size
+      leaf? ? 0 : children.map(&:size).reduce(:+)
+    end
   end
 end

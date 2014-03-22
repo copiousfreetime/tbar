@@ -16,5 +16,12 @@ module Tbar
       assert l.leaf?
       refute l.root?
     end
+
+    def test_size
+      a = Account.new( :name => 'root', :type => Tbar::AccountType::ASSET )
+      a.create_child( 'leaf1' )
+      a.create_child( 'leaf2' )
+      assert_equal 3, a.size
+    end
   end
 end
