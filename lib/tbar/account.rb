@@ -40,6 +40,19 @@ module Tbar
       children.empty?
     end
 
+    # Public: The Depth of this account
+    #
+    # Return the tree depth of this account. This is the number of levels of
+    # accounts, including this account
+    def depth
+      children_depth + 1
+    end
+
+    # Internal: The maximum depth of all the children
+    def children_depth
+      leaf? ? 0 : children.map(&:depth).max
+    end
+
     # Public: The number of accounts and sub accounts in this account
     #
     # Returns Number
