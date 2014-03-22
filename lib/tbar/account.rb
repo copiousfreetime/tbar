@@ -46,12 +46,10 @@ module Tbar
     # name already exists in children, then return that child instead.
     #
     def add_child( name )
-      account  = build_child( name )
-      if existing = children.find { |child| child == account } then
+      if existing = children.find { |child| child.name == name } then
         return existing
       else
-        attach_child( account )
-        return account
+        return create_child( name )
       end
     end
 
@@ -70,19 +68,20 @@ module Tbar
       Account.new( :name => name, :type => type, :parent => self )
     end
 
-    # Public: Create a child path of accounts.
+    # Public: Add a child path of accounts.
     #
-    # Create a lineage of accounts, below this account.
+    # Create a lineage of accounts, below this account, it will merge it with
+    # the existing accounts
     #
     # names - an array of names, each name is the account name of that path
     #         componenet
     #
     # Example:
     #   expenses = Account.expenses
-    #   expenses.create_child_path( [ 'Banking', 'Service Fee' ] )
+    #   expenses.add_child_path( [ 'Banking', 'Service Fee' ] )
     #
     # Returns nothing
-    def create_child_path( names )
+    def add_child_path( names )
       components = names.dup
       parent     = self
 
@@ -124,6 +123,18 @@ module Tbar
     # Returns Integer
     def children_size
       leaf? ? 0 : children.map(&:size).reduce(:+)
+    end
+
+    # Public: return the account tree as an array of Accounts
+    #
+    def to_array
+      children.each_with_object( [ self ] ) { |child, memo|
+        memo.concat( child.to_array )
+      }.flatten
+    end
+
+    def to_s
+      "#<#{self.class.name} #{object_id} name:#{self.name} type:#{type} children:#{children.size} >"
     end
 
     protected
