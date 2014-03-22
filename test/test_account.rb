@@ -40,9 +40,18 @@ module Tbar
 
     def test_create_child_tree
       a = Account.new( :name => 'root', :type => Tbar::AccountType::ASSET )
-      a.create_child_path( %w[ child grandchild leaf ] )
+      a.create_child_path( %w[ child grand-child leaf ] )
       assert_equal 4, a.depth
       assert_equal 4, a.size
     end
+
+    def test_create_child_tree_merges_with_existing_accounts
+      a = Account.new( :name => 'root', :type => Tbar::AccountType::ASSET )
+      a.create_child_path( %w[ child grand-child leaf ] )
+      a.create_child_path( %w[ child grand-child great-grand-child leaf2 ] )
+      assert_equal 6, a.size
+      assert_equal 5, a.depth
+    end
+
   end
 end

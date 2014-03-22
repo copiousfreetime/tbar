@@ -6,10 +6,10 @@ module Tbar
   # linked to its parent acccount.
   class Account
 
-    attr_reader :type
-    attr_reader :name
-    attr_reader :children
-    attr_reader :parent
+    attr_reader   :type
+    attr_reader   :name
+    attr_reader   :children
+    attr_accessor :parent
 
     def initialize( kwargs = {} )
       @name     = kwargs.fetch( :name )
@@ -37,9 +37,37 @@ module Tbar
     # Create a child with the given name. The :type will be inherited from the
     # parent.
     def create_child( name )
-      child = Account.new( :name => name, :type => type, :parent => self )
-      children << child
-      return child
+      account = build_child( name )
+      attach_child( account )
+      return account
+    end
+
+    # Public: Adds a new child with the given name. If a child with that given
+    # name already exists in children, then return that child instead.
+    #
+    def add_child( name )
+      account  = build_child( name )
+      if existing = children.find { |child| child == account } then
+        return existing
+      else
+        attach_child( account )
+        return account
+      end
+    end
+
+    # Public: Attaches the given Account as a child of this Account
+    #
+    # account - an instance of Account that will attached as a child of this
+    #           account
+    def attach_child( account )
+      account.parent = self
+      children << account
+    end
+
+    # Public: Return an new account that would be a child account but is not one
+    #         of the children yet
+    def build_child( name )
+      Account.new( :name => name, :type => type, :parent => self )
     end
 
     # Public: Create a child path of accounts.
@@ -61,7 +89,7 @@ module Tbar
       loop do
         break if components.empty?
         child  = components.shift
-        parent = parent.create_child( child )
+        parent = parent.add_child( child )
       end
     end
 
