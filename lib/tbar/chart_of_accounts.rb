@@ -44,6 +44,17 @@ module Tbar
       @options   = kwargs.fetch( :options, ChartOfAccounts.default_options )
     end
 
+    # Public: Bulk load a list of path into the Chart of Accounts
+    #
+    # paths - an array of strings suibable for passing into add_account
+    #
+    # Returns nothing
+    def load_paths( paths = [] )
+      paths.each do |path|
+        add_account( path )
+      end
+    end
+
     # Public: Add a new account with the given path.
     #
     # path - the String path of the account from the top level group to the
@@ -61,6 +72,12 @@ module Tbar
     # Public: The depth of the Account tree in the chart
     def depth
       chart.depth
+    end
+
+    # Public: Convert the Chart to an Array of Accounts
+    #
+    def to_array
+      chart.to_array
     end
 
     # Internal:
