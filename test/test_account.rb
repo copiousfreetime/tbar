@@ -2,7 +2,7 @@ require 'test_helper'
 require 'tbar/account'
 
 module Tbar
-  class AccountTest < ::Minitest::Test
+  class AccountTest < Test
     def test_is_root
       a = Account.new( :name => 'root', :type => Tbar::AccountType::ASSET )
       assert a.root?
@@ -61,6 +61,12 @@ module Tbar
       assert_equal 6, ary.size
       names = %w[ root child grand-child leaf great-grand-child leaf2 ].sort
       assert_equal names, ary.map(&:name).sort
+    end
+
+    def test_expand_name
+      a = Account.new( :name => 'root', :type => Tbar::AccountType::ASSET )
+      l = a.add_child_path( %w[ child grand-child great-grand-child leaf2 ] )
+      assert_equal( %w[ root child grand-child great-grand-child leaf2], l.expand_name )
     end
 
   end

@@ -1,3 +1,4 @@
+require 'tbar/account_type'
 module Tbar
   # Public: An Account represents a single account in the Chart of Accounts. It
   # may have child accounts.
@@ -90,6 +91,7 @@ module Tbar
         child  = components.shift
         parent = parent.add_child( child )
       end
+      return parent
     end
 
     # Public: Is the current Account a leaf account?
@@ -123,6 +125,15 @@ module Tbar
     # Returns Integer
     def children_size
       leaf? ? 0 : children.map(&:size).reduce(:+)
+    end
+
+    # Public: expand the name of the Account
+    #
+    # expand the name to be an array of all the anems in this account and all of
+    # its parent accounts
+    def expand_name
+      return [ name ] if root?
+      return parent.expand_name.push( name )
     end
 
     # Public: return the account tree as an array of Accounts
