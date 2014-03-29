@@ -24,7 +24,7 @@ module Tbar
     # path_separator : the string used to separate an Account Path into its
     #                  components
     def self.default_options
-      { :path_separator => "/" }
+      { :path_separator => ":" }
     end
 
     # Internal
