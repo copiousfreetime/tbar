@@ -28,7 +28,7 @@ the accounts are classified into the following five types:
 
 * Assets = Liabilities + Capital(Equity)
 * Equity = Assets - Liabilities
-* Assets + Expenses = Equity + Liabilities + Income
+* Assets + Expenses = Equity + Liabilities + Revenue
 
 
 ## Asset
@@ -47,7 +47,6 @@ trust accounts, accrued expenses, sales taxes, advance payments (unearned
 revenue), debt and accrued interest on debt, etc.
 
 All accounts in this subsection are 'payable'
-
 
 ## Equity
 
@@ -75,8 +74,8 @@ debts, stationery, entertainment, honorarium, rent, fuel, etc.
 ## Top level accounts
 * Asset
 * Liability
-* Equity - these may be the same
-* Revenue- these may be the same
+* Equity
+* Revenue
 * Expenses
 
 - look at accounting book, find definitive top level rules on the algorithm used
@@ -113,7 +112,7 @@ debts, stationery, entertainment, honorarium, rent, fuel, etc.
 * Name / Description
 * Type - Asset, Liability, Equity, Expenese, Revenue
 * Cash Account Y/N
-* Balance Sheet Account Y/N - mutual exclusivewith P&L account
+* Balance Sheet Account Y/N - mutual exclusive with P&L account
 * Profit & Loss Account Y/N
 
 - dealing with tree structure. Initially, this can be just parent account, and
@@ -131,7 +130,7 @@ debts, stationery, entertainment, honorarium, rent, fuel, etc.
 * Assets = Liability + Equity
 
 ## Profit & Loss
-* sum of revenus vs expenses
+* sum of Revenues vs Expenses
 * breakdown of debit
 
 ## Cash Flow
