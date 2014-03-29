@@ -1,3 +1,4 @@
+require 'money'
 module Tbar
   # Private: Entry is one item of a Transaction. It represents one of the
   # Credit or Debit entries in a Transaction.
@@ -5,29 +6,23 @@ module Tbar
     # The Account this posting is for
     attr_reader :account
 
-    # The Amount of the Posting, this must be a whole number
+    # The Amount of the Posting, this must be a Money object, or something that
+    # may be converted to a Money object
     attr_reader :amount
-
-    # The Commodity - USD, ticker symbol, etc.
-    attr_reader :commodity
 
     # Additional text to go with this posting
     attr_reader :note
 
-    def self.default_commodity
-      @default_commodity ||= :usd
-    end
-
-    def self.default_commodity=( com )
-      @default_commodity = com
-    end
-
     def initialize( kwargs = {} )
       @account   = kwargs.fetch( :account )
-      @amount    = kwargs.fetch( :amount )
-
-      @commodity = kwargs.fetch( :commodity, self.class.default_commodity )
+      amt        = kwargs.fetch( :amount )
+      commodity  = kwargs.fetch( :commodity, nil )
+      @amount    = ::Money.new( amt, commodity || Money.default_currency )
       @note      = kwargs.fetch( :note, nil )
+    end
+
+    def commodity
+      amount.currency
     end
 
     def type

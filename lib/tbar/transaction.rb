@@ -1,4 +1,6 @@
 require 'tbar/errors'
+require 'tbar/debit'
+require 'tbar/credit'
 module Tbar
   # Public: Transation represents all the data about moving a an amount from one
   # account to another. 
@@ -60,7 +62,7 @@ module Tbar
     private
 
     def sum( entry_list )
-      entry_list.reduce(0) { |memo, entry| memo += entry.amount }
+      entry_list.reduce(Money.empty) { |memo, entry| memo += entry.amount }
     end
 
   end
