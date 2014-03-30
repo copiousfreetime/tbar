@@ -4,6 +4,7 @@ module Tbar
   class JaroWinkler
     JARO_BOOST_THRESHOLD  = 0.7
     WINKLER_PREFIX_LENGTH = 4
+    WINKLER_PREFIX_SCALE  = 0.1
 
     def self.distance( s1, s2)
       JaroWinkler.new( s1, s1 ).distance
@@ -17,9 +18,13 @@ module Tbar
                                    clean(s2) )
     end
 
-    def distance
+    def score
       return 0.0 if shorter.empty?
-      return jaro_score
+      score = jaro_score
+      if score > JARO_BOOST_THRESHOLD then
+        score += winkler_score( score )
+      end
+      return score
     end
 
     def jaro_score
@@ -33,6 +38,26 @@ module Tbar
     end
 
     private
+
+    def winkler_score( jaro_score )
+      winkler_count * WINKLER_PREFIX_SCALE * (1 - jaro_score)
+    end
+
+    def winkler_count
+      count = 0
+      (0..winkler_max_index).each do |idx|
+        if shorter[idx] == longer[idx] then
+          count += 1
+        else
+          break
+        end
+      end
+      return count
+    end
+
+    def winkler_max_index
+      [WINKLER_PREFIX_LENGTH, shorter.length - 1].min
+    end
 
     # Returns the count of the number of items in m that are out of order.
     def transpositions( m )
