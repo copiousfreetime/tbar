@@ -48,20 +48,19 @@ module Tbar
 
       ]
 
+      @jw = JaroWinkler.new
     end
 
     def test_jaro
       @scores.each do |s1, s2, j_score, w_score|
-        jw = Tbar::JaroWinkler.new( s1, s2 )
-        value = "%0.3f" % jw.jaro_score
+        value = "%0.3f" % @jw.jaro_distance( s1, s2 )
         assert_equal( j_score, value, "Failure scoring #{s1} with #{s2}" )
       end
     end
 
     def test_score
       @scores.each do |s1, s2, j_score, w_score|
-        jw = Tbar::JaroWinkler.new( s1, s2 )
-        value = "%0.3f" % jw.score
+        value = "%0.3f" % @jw.distance( s1, s2 )
         assert_equal( w_score, value, "Failure scoring #{s1} with #{s2}" )
       end
     end
