@@ -13,7 +13,7 @@ module Tbar
     attr_reader :shorter
     attr_reader :longer
 
-    def initialize( s1, s2)
+    def initialize( s1, s2 )
       @shorter, @longer = ordered( clean(s1), 
                                    clean(s2) )
     end
@@ -29,6 +29,7 @@ module Tbar
 
     def jaro_score
       m = matches
+      return 0.0 if m.empty?
       t = transpositions( m )
       mf = Float(m.size)
 
@@ -56,7 +57,7 @@ module Tbar
     end
 
     def winkler_max_index
-      [WINKLER_PREFIX_LENGTH, shorter.length - 1].min
+      [WINKLER_PREFIX_LENGTH, shorter.length].min - 1
     end
 
     # Returns the count of the number of items in m that are out of order.
@@ -90,7 +91,7 @@ module Tbar
     end
 
     def search_window_size
-      @search_window_size ||= longer.length / 2 - 1
+      @search_window_size ||= (longer.length / 2) - 1
     end
 
     def ordered( s1, s2 )
