@@ -45,7 +45,7 @@ module Tbar
 
 
       def clean( s )
-        s.strip.downcase.chars.to_a
+        s.to_s.strip.downcase.chars.to_a
       end
 
       def ordered( s1, s2 )
