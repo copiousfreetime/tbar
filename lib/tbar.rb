@@ -1,5 +1,13 @@
+require 'tbar/fiber_local'
 module Tbar
   VERSION = "1.0.0"
+
+  module_function
+
+  def config( new_fiber_local = FiberLocal.new )
+    @config ||= new_fiber_local
+  end
+
 end
 require 'tbar/errors'
 require 'tbar/account_type'
