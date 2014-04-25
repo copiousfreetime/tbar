@@ -91,7 +91,7 @@ debts, stationery, entertainment, honorarium, rent, fuel, etc.
 * Metadata
 * type - invoice, bill, payment, purchase, deposit, transfer
 
-### Posting - transaction has at least two postings
+### Entry - transaction has at least two postings
 * Account
 * Credit/Debit
 * Amount
