@@ -46,7 +46,7 @@ module Tbar
       @local[:foo] = "bar"
       assert_equal(before+1, @local.keys.size)
       @local.delete( "foo" )
-      assert_equal 1, @local.keys.size
+      assert_equal(before, @local.keys.size)
     end
 
     def test_clear
