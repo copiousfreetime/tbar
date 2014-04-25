@@ -18,8 +18,8 @@ module Tbar
     def initialize( kwargs = {} )
       @account   = kwargs.fetch( :account )
       amt        = kwargs.fetch( :amount )
-      commodity  = kwargs.fetch( :commodity, nil )
-      @amount    = ::Money.new( amt, commodity || Money.default_currency )
+      commodity  = kwargs.fetch( :commodity, Money.default_currency)
+      @amount    = ::Money.new( amt, commodity )
       @note      = kwargs.fetch( :note, nil )
     end
 
