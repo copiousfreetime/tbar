@@ -3,12 +3,6 @@ require 'tbar/fiber_local'
 
 module Tbar
   class FiberLocalTest < Test
-    class Container
-      def locals
-        @locals ||= Tbar::FiberLocal.new
-      end
-    end
-
     def setup
       @local = Tbar::FiberLocal.new
     end
@@ -28,8 +22,9 @@ module Tbar
     end
 
     def test_store
+      before = @local.keys.size
       @local[:foo] = "bar"
-      assert_equal 2, @local.keys.size
+      assert_equal( (before+1), @local.keys.size )
     end
 
     def test_fetch
@@ -38,24 +33,27 @@ module Tbar
     end
 
     def test_fetch_indifferent_access
+      before = @local.keys.size
       @local[:foo] = "bar"
       assert_equal "bar", @local["foo"]
       @local["foo"] = "baz"
       assert_equal "baz", @local[:foo]
-      assert_equal 2, @local.keys.size
+      assert_equal( (before+1), @local.keys.size )
     end
 
     def test_delete
+      before = @local.keys.size
       @local[:foo] = "bar"
-      assert_equal 2, @local.keys.size
+      assert_equal(before+1, @local.keys.size)
       @local.delete( "foo" )
       assert_equal 1, @local.keys.size
     end
 
     def test_clear
+      before = @local.keys.size
       @local[:foo] = "bar"
       @local[:baz] = "wibble"
-      assert_equal 3, @local.keys.size
+      assert_equal( before+2, @local.keys.size )
       @local.clear
       assert_equal 1, @local.keys.size
       refute @local.key?( :foo )
