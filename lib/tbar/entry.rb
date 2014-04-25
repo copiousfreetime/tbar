@@ -1,16 +1,18 @@
 require 'money'
 module Tbar
   # Private: Entry is one item of a Transaction. It represents one of the
-  # Credit or Debit entries in a Transaction.
+  # Credit or Debit entries in a Transaction. The Entry should never be
+  # instantiated directly. It should be instantiated as either a Credit or
+  # Debit.
   class Entry
-    # The Account this posting is for
+    # The Account this entry is for
     attr_reader :account
 
-    # The Amount of the Posting, this must be a Money object, or something that
+    # The Amount of the entry, this must be a Money object, or something that
     # may be converted to a Money object
     attr_reader :amount
 
-    # Additional text to go with this posting
+    # Additional text to go with this entry
     attr_reader :note
 
     def initialize( kwargs = {} )

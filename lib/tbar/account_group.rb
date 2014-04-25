@@ -1,5 +1,5 @@
 module Tbar
-  # Publice: Account Group acts as an invisible top level Account for group
+  # Publice: Account Group acts as an invisible top level Account to group
   # account trees together.
   #
   # The Account group does not count as part of the depth, or size of the tree.
