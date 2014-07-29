@@ -28,6 +28,18 @@ module Tbar
       assert_equal 3, chart.depth
       assert_equal 7, chart.size
     end
+
+    def test_account_by_name
+      chart = ChartOfAccounts.new( :options => { :path_separator => "/" } )
+      assert_equal 5, chart.size
+      chart.add_account( 'Expenses/Banking/Service Fee' )
+      assert_equal 3, chart.depth
+      assert_equal 7, chart.size
+      by_name = chart.accounts_by_name
+      assert_equal 8, by_name.size
+      assert_instance_of Tbar::Account, by_name['Expenses/Banking/Service Fee']
+      assert_instance_of Tbar::Account, by_name['Expenses/Banking']
+    end
   end
 end
  

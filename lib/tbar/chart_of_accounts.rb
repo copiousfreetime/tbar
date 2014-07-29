@@ -80,6 +80,14 @@ module Tbar
       chart.to_array
     end
 
+    # Public: Create a hash of the account names to the account objects
+    def accounts_by_name
+      to_array.each_with_object( {} ) do |account, h|
+        real_name = account.expand_name.join( path_separator )
+        h[real_name] = account
+      end
+    end
+
     # Internal:
     #
     # Access the path_separator option
