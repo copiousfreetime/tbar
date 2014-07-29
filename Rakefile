@@ -11,6 +11,7 @@ This.ruby_gemspec do |spec|
   spec.add_dependency( 'monetize', '~> 0.3' )
   spec.add_dependency( 'sequel', '~> 4.12' )
   spec.add_dependency( 'pg', '~> 0.17' )
+  spec.add_dependency( 'trollop', '~> 2.0' )
 
   spec.add_development_dependency( 'rake'     , '~> 10.1')
   spec.add_development_dependency( 'minitest' , '~> 5.3' )
