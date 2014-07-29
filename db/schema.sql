@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS accounts(
 
 CREATE TABLE IF NOT EXISTS payees(
   id          SERIAL PRIMARY KEY,
-  account_id  integer NOT NULL REFERENCES accounts(id),
+  account_id  integer REFERENCES accounts(id),
   name        text    NOT NULL UNIQUE
 );
 
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS imports (
 
 CREATE TABLE IF NOT EXISTS import_rows(
   id        SERIAL  PRIMARY KEY,
-  import_id integer REFERENCES imports(id),
+  import_id integer NOT NULL REFERENCES imports(id),
   row_index integer NOT NULL,
   date      text    NOT NULL,
   note      text    NOT NULL,
