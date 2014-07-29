@@ -37,5 +37,10 @@ module Tbar
       assert_equal Money.new(666), t.debit_amount
     end
 
+    def test_validity_from_entries
+      t = Tbar::Transaction.new( :entries => [ @credits, @debits ].flatten )
+      assert t.valid?
+    end
+
   end
 end

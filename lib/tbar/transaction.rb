@@ -24,11 +24,13 @@ module Tbar
     # :debits  - An array of Debits
     # :debit   - A single Debit
     # :date    - The date of the transaction, defaults to today
+    # :entries - An array of entries
     # :note    - A note to put with the transaction
     # :payee   - The external entity that is 
     def initialize( kwargs = {} )
-      @credits = [ kwargs[:credits], kwargs[:credit] ].flatten.compact
-      @debits  = [ kwargs[:debits],  kwargs[:debit]  ].flatten.compact
+      entries  = kwargs.fetch( :entries, [] ).group_by { |e| e.type }
+      @credits = [ kwargs[:credits], kwargs[:credit], entries[:credit] ].flatten.compact
+      @debits  = [ kwargs[:debits],  kwargs[:debit],  entries[:debit]  ].flatten.compact
       @date    = kwargs.fetch( :date, Date.today )
       @note    = kwargs.fetch( :note, "" )
       @payee   = kwargs.fetch( :payee, "" )
