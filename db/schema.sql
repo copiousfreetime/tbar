@@ -2,13 +2,13 @@
 
 CREATE TABLE IF NOT EXISTS accounts(
   id   SERIAL PRIMARY KEY,
-  name text    NOT NULL
+  name text    NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS payees(
   id          SERIAL PRIMARY KEY,
   account_id  integer NOT NULL REFERENCES accounts(id),
-  name        text    NOT NULL
+  name        text    NOT NULL UNIQUE
 );
 
 -- Used for the jaro winkler testing
