@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+require 'trollop'
+require 'pathname'
+require 'sequel'
+require 'tbar'
+
+opts = Trollop::options do
+  version "import-chart-of-accounts v#{Tbar::VERSION}"
+  banner <<-EOS
+  Create a new chart of accounts from an existing file. The file must be
+  formatted with one account per line and the levels of the accounts separated
+  by ':' characters.
+  EOS
+
+  opt :db, "The Database connection string", :default => 'postgres:///tbar'
+  opt :file, "The file to import", :required => true, :type => :string
+end
+
+DB    = Sequel.connect( opts[:db] )
+INPUT = Pathname.new( opts[:file] )
+
+chart = DB[:accounts].prepare( :insert, :insert_with_name, :name => :$n )
+count = 0
+INPUT.each_line do |line|
+  line.strip!
+  next unless line.length > 0
+  chart.call( :n => line )
+  count += 1
+  puts "Inserted #{count} : #{line}"
+end
