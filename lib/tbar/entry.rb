@@ -38,5 +38,9 @@ module Tbar
     def to_s
       "#<#{self.class.name} #{object_id} name:#{self.account.name} type:#{type} amount:#{amount}>"
     end
+
+    def paired_entry( other_account )
+      other_entry.new( :amount => -amount, :account => other_account )
+    end
   end
 end
