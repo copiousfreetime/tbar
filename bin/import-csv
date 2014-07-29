@@ -3,8 +3,6 @@
 require 'trollop'
 require 'sequel'
 require 'tbar'
-require 'csv'
-require 'monetize'
 
 opts = Trollop::options do
   version "import-chart-of-accounts v#{Tbar::VERSION}"
@@ -15,7 +13,7 @@ opts = Trollop::options do
   EOS
 
   opt :db, "The Database connection string", :default => 'postgres:///tbar'
-  opt :file, "The file to import", :required => true, :type => :string
+  opt :from, "The file to import", :required => true, :type => :string
   opt :account, "The account import this CSV for", :required => true, :type => :string
 
   opt :date_field, "The csv column to map to the date field", :default => 'date'
@@ -24,22 +22,7 @@ opts = Trollop::options do
 end
 
 DB = Sequel.connect( opts[:db] )
-chart = Tbar::ChartOfAccounts.new
-DB[:accounts].select(:name).each do |row|
-  a = chart.add_account( row[:name] )
-end
 
-target_account = chart.accounts_by_name[ opts[:account] ]
+import         = Tbar::CsvImport.new( opts.merge( :db => DB ) )
+import.call
 
-CSV.foreach( opts[:file], :headers => :first_row, :return_headers => false ) do |row|
-  date   = Date.parse( row[opts[:date_field]] )
-  note   = row[opts[:note_field]]
-  amount = Monetize.parse( row[opts[:amount_field]] )
-
-  entry = target_account.entry_for( amount )
-  payee = Tbar::PayeeLookup.call( remapped[:note] )
-  other = entry.paired_entry( payee.account )
-  trans = Tbar::Transaction.new( :entries => [ entry, other ], :date => remapped,
-                                 :note => note, :payee => payee )
-  puts entry.to_s
-end

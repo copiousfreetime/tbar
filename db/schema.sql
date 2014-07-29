@@ -34,3 +34,26 @@ CREATE TABLE IF NOT EXISTS entries (
   type            text    NOT NULL CHECK (type IN ('debit', 'credit')),
   note            text
 );
+
+CREATE TABLE IF NOT EXISTS imports (
+  id           SERIAL  PRIMARY KEY,
+  sha256       text    NOT NULL UNIQUE,
+  date_field   text    NOT NULL,
+  note_field   text    NOT NULL,
+  amount_field text    NOT NULL,
+  path         text    NOT NULL,
+  byte_count   integer NOT NULL,
+  content      text    NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS import_rows(
+  id        SERIAL  PRIMARY KEY,
+  import_id integer REFERENCES imports(id),
+  row_index integer NOT NULL,
+  date      text    NOT NULL,
+  note      text    NOT NULL,
+  amount    text    NOT NULL,
+  content   text    NOT NULL
+);
+CREATE UNIQUE INDEX idx_import_lines_on_id_line_idx ON import_rows( import_id, row_index);
+
