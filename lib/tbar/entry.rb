@@ -31,5 +31,8 @@ module Tbar
       raise NotImplementedError, "'type' not defined for Entry. Use Credit or Debit"
     end
 
+    def to_s
+      "#<#{self.class.name} #{object_id} name:#{self.account.name} type:#{type} amount:#{amount}>"
+    end
   end
 end
