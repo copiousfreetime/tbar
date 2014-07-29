@@ -148,6 +148,14 @@ module Tbar
       "#<#{self.class.name} #{object_id} name:#{self.name} type:#{type} children:#{children.size} >"
     end
 
+    def entry_for( amount, note = nil )
+      if amount < 0 then
+        type.decreasing_entry( :account => self, :amount => amount, :note => note )
+      else
+        type.increasing_entry( :account => self, :amount => amount, :note => note )
+      end
+    end
+
     protected
 
     # Internal

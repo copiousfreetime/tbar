@@ -1,3 +1,5 @@
+require 'tbar/credit'
+require 'tbar/debit'
 module Tbar
   class AccountType
     class GroupType < AccountType; end
@@ -5,15 +7,23 @@ module Tbar
     GROUP     = GroupType.new
 
     class DebitType < AccountType
-      def increasing; :credit end
-      def decreasing; :dedit end
-      def type; increasing; end
+      def increasing; Tbar::Credit end
+      def decreasing; Tbar::Debit end
+      def type; increasing end
     end
 
     class CreditType < AccountType
-      def increasing; :dedit end
-      def decreasing; :credit end
-      def type; increasing; end
+      def increasing; Tbar::Debit end
+      def decreasing; Tbar::Credit end
+      def type; increasing end
+    end
+
+    def increasing_entry( kwargs = {} )
+      increasing.new( kwargs )
+    end
+
+    def decreasing_entry( kwargs = {} )
+      decreasing.new( kwargs )
     end
 
     ASSET     = DebitType.new
