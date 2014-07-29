@@ -10,9 +10,10 @@ module Tbar
     def test_2_debit_types
       assert_equal 2, AccountType.debits.size
     end
-    
+
     def test_3_debit_types
       assert_equal 3, AccountType.credits.size
     end
+
   end
 end
