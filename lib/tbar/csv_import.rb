@@ -43,6 +43,7 @@ module Tbar
                                          :note_field   => @note_field,
                                          :amount_field => @amount_field,
                                          :byte_count   => @from.size,
+                                         :account_name => @account_name,
                                          :content      => @from.read )
 
         row_idx = 0

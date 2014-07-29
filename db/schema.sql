@@ -2,7 +2,7 @@
 
 CREATE TABLE IF NOT EXISTS accounts(
   id   SERIAL PRIMARY KEY,
-  name text    NOT NULL UNIQUE
+  name text   NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS payees(
@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS entries (
 
 CREATE TABLE IF NOT EXISTS imports (
   id           SERIAL  PRIMARY KEY,
+  account_name text    NOT NULL REFERENCES accounts(name),
   sha256       text    NOT NULL UNIQUE,
   date_field   text    NOT NULL,
   note_field   text    NOT NULL,
