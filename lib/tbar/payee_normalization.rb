@@ -10,7 +10,6 @@ module Tbar
 
     def call
       notes_to_payees
-
     end
 
     private
