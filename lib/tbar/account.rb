@@ -129,7 +129,7 @@ module Tbar
 
     # Public: expand the name of the Account
     #
-    # expand the name to be an array of all the anems in this account and all of
+    # expand the name to be an array of all the names in this account and all of
     # its parent accounts
     def expand_name
       return [ name ] if root?
