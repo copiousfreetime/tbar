@@ -4,5 +4,9 @@ module Tbar
     def type
       :debit
     end
+
+    def other_entry
+      Tbar::Credit
+    end
   end
 end
