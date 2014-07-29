@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS accounts(
 CREATE TABLE IF NOT EXISTS payees(
   id          SERIAL PRIMARY KEY,
   account_id  integer REFERENCES accounts(id),
+  associated  boolean NOT NULL DERFAULT true,
   name        text    NOT NULL UNIQUE
 );
 
