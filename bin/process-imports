@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require 'trollop'
+require 'sequel'
+require 'tbar'
+
+opts = Trollop::options do
+  version "#{$0} v#{Tbar::VERSION}"
+  banner "Process all the import rows that are not yet converted."
+
+  opt :db, "The Database connection string", :default => 'postgres:///tbar'
+end
+
+DB = Sequel.connect( opts[:db] )
+
+process = Tbar::ProcessImports.new( DB )
+process.call
+#puts "Processed #{process.row_count}"
+

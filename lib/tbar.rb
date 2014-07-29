@@ -19,3 +19,6 @@ require 'tbar/debit'
 require 'tbar/transaction'
 require 'tbar/chart_of_accounts'
 require 'tbar/csv_import'
+require 'tbar/process_imports'
+require 'tbar/payee_normalization'
+
