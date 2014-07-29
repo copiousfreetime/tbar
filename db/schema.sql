@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS import_rows(
   date      text    NOT NULL,
   note      text    NOT NULL,
   amount    text    NOT NULL,
+  converted boolean NOT NULL DEFAULT false,
   content   text    NOT NULL
 );
 CREATE UNIQUE INDEX idx_import_lines_on_id_line_idx ON import_rows( import_id, row_index);

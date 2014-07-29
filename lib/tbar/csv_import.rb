@@ -9,22 +9,27 @@ module Tbar
     attr_reader :db
     attr_reader :account
     attr_reader :chart
+    attr_reader :import_id
 
     def initialize( kwargs = {} )
       @db           = kwargs.fetch( :db )
-      @chart        = load_chart_of_accounts()
+      @chart        = load_chart_of_accounts
       @account_name = kwargs.fetch( :account )
       @account      = chart.accounts_by_name[ kwargs.fetch( :account ) ]
       @from         = Pathname.new( kwargs.fetch( :from ) ).realpath
       @date_field   = kwargs.fetch( :date_field )
       @note_field   = kwargs.fetch( :note_field )
       @amount_field = kwargs.fetch( :amount_field )
-
+      @import_id    = nil
       validate
     end
 
     def call
-      insert_import_record
+      load_import_data
+    end
+
+    def row_count
+      db[:import_rows].where( :import_id => import_id ).count
     end
 
     private
@@ -34,10 +39,9 @@ module Tbar
       raise ArgumentError, "account #{@account_name} does not exist in the chart of accounts" unless account
     end
 
-    def insert_import_record
-      puts "importing #{@from.size} bytes from #{@from}"
+    def load_import_data
       db.transaction do
-        import_id = db[:imports].insert( :path         => @from.to_s,
+        @import_id = db[:imports].insert( :path         => @from.to_s,
                                          :sha256       => Digest::SHA256.file(@from.to_s).hexdigest,
                                          :date_field   => @date_field,
                                          :note_field   => @note_field,

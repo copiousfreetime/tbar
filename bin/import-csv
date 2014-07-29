@@ -23,6 +23,7 @@ end
 
 DB = Sequel.connect( opts[:db] )
 
-import         = Tbar::CsvImport.new( opts.merge( :db => DB ) )
+import = Tbar::CsvImport.new( opts.merge( :db => DB ) )
 import.call
+puts "Imported #{import.row_count} rows from #{opts[:from]} into #{opts[:account]}"
 
