@@ -7,14 +7,14 @@ module Tbar
     GROUP     = GroupType.new
 
     class DebitType < AccountType
-      def increasing; Tbar::Credit end
-      def decreasing; Tbar::Debit end
+      def increasing; Tbar::Debit end
+      def decreasing; Tbar::Credit end
       def type; increasing end
     end
 
     class CreditType < AccountType
-      def increasing; Tbar::Debit end
-      def decreasing; Tbar::Credit end
+      def increasing; Tbar::Credit end
+      def decreasing; Tbar::Debit end
       def type; increasing end
     end
 
