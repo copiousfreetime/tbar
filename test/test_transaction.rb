@@ -42,5 +42,16 @@ module Tbar
       assert t.valid?
     end
 
+    def test_add_debit_entry
+      t = Tbar::Transaction.new
+      t.add_entry( @credit )
+      refute t.valid?
+      t.add_entry( @debit )
+      assert t.valid?
+
+      assert_equal @credit, t.credits.first
+      assert_equal @debit, t.debits.first
+    end
+
   end
 end

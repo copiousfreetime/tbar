@@ -61,6 +61,18 @@ module Tbar
       return false
     end
 
+    # Public: Add an entry
+    def add_entry( entry )
+      case entry
+      when Credit
+        credits << entry
+      when Debit
+        debits << entry
+      else
+        raise ArgumentError, "Transaction is unable to handle an Unknown type: #{entry}"
+      end
+    end
+
     def entries
       [credits, debits ].flatten
     end
