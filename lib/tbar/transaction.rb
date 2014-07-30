@@ -61,6 +61,17 @@ module Tbar
       return false
     end
 
+    def to_s
+      lines =  [ "#{date} #{payee}" ]
+      credits.each do |credit|
+        lines << "    C #{credit.amount} #{credit.account.expand_name.join(':')} -- #{credit.note}"
+      end
+      debits.each do |debit|
+        lines << "    D #{debit.amount} #{debit.account.expand_name.join(':')} -- #{debit.note}"
+      end
+      lines.join("\n")
+    end
+
     private
 
     def sum( entry_list )
