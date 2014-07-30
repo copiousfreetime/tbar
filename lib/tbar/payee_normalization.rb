@@ -33,7 +33,6 @@ module Tbar
           menu.prompt = "What Account should be the default associated withe #{row[:name]}"
           by_name     = chart.accounts_by_name
           menu.choices( *by_name.keys.sort.map { |s| s.strip } ) do |name|
-            account    = by_name[name]
             account_id = db[:accounts][:name => name][:id]
             puts "Setting #{row[:name]} default account to be #{account_id} (#{name}) #{row.class}"
             db[:payees].where( :id => row[:id] ).update( :account_id => account_id )
@@ -44,7 +43,7 @@ module Tbar
     end
 
     def notes_to_payees
-      db[:import_rows].where( :converted => false ).each do |row|
+      db[:import_rows].where( "entry_id is null" ).each do |row|
         to_payee = db[:to_payees][:description => row[:note]]
         next if to_payee
 
