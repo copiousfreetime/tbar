@@ -128,6 +128,34 @@ module Tbar
       db[sql].to_enum
     end
 
+    def deposit_rows( import )
+      payee_rows( import, 'Deposit' )
+    end
+
+    def transfer_rows( import )
+      payee_rows( import, 'Transfer' )
+    end
+
+    def payee_rows( import, payee )
+      sql = <<-SQL
+        SELECT row.id      AS row_id
+              ,row.date    AS date
+              ,row.note    AS note
+              ,row.amount  AS amount
+              ,to_p.payee_id AS payee_id
+         FROM import_rows AS row
+         JOIN to_payees   AS to_p
+           ON row.note = to_p.description
+         JOIN payees      AS p
+           on to_p.payee_id = p.id
+        WHERE row.entry_id IS NULL
+          AND row.import_id = ?
+          And p.name = ?
+     ORDER BY row.date ASC
+      SQL
+      db[sql, import[:id], payee].to_enum
+    end
+
     def import_rows( import )
       sql = <<-SQL
         SELECT row.id      AS row_id
