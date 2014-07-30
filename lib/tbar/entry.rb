@@ -36,7 +36,7 @@ module Tbar
     end
 
     def to_s
-      "#<#{self.class.name} #{object_id} name:#{self.account.name} type:#{type} amount:#{amount}>"
+      "#<#{self.class.name} #{object_id} name:#{self.account.real_name} type:#{type} amount:#{amount}>"
     end
 
     def paired_entry( other_account, note = nil )
