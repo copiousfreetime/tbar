@@ -150,7 +150,7 @@ module Tbar
 
     def entry_for( amount, note = nil )
       if amount < 0 then
-        type.decreasing_entry( :account => self, :amount => amount, :note => note )
+        type.decreasing_entry( :account => self, :amount => -amount, :note => note )
       else
         type.increasing_entry( :account => self, :amount => amount, :note => note )
       end
