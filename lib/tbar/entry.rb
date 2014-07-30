@@ -39,8 +39,8 @@ module Tbar
       "#<#{self.class.name} #{object_id} name:#{self.account.name} type:#{type} amount:#{amount}>"
     end
 
-    def paired_entry( other_account )
-      other_entry.new( :amount => -amount, :account => other_account )
+    def paired_entry( other_account, note = nil )
+      other_entry.new( :amount => amount, :account => other_account, :note => note )
     end
   end
 end
