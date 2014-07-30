@@ -61,6 +61,10 @@ module Tbar
       return false
     end
 
+    def entries
+      [credits, debits ].flatten
+    end
+
     def to_s
       lines =  [ "#{date} #{payee}" ]
       credits.each do |credit|

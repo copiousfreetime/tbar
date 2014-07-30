@@ -136,6 +136,10 @@ module Tbar
       return parent.expand_name.push( name )
     end
 
+    def real_name
+      expand_name.join(':')
+    end
+
     # Public: return the account tree as an array of Accounts
     #
     def to_array
