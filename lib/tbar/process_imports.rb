@@ -13,7 +13,9 @@ module Tbar
 
     def call
       normalize_payees
-      build_transactions
+      process_deposits
+      #process_transfers
+      #build_transactions
     end
 
     private 
@@ -31,48 +33,72 @@ module Tbar
       end
     end
 
+    def process_deposits
+      imports.each do |import|
+        puts "Importing deposit rows from #{import[:path]}"
+        deposit_rows( import ).each do |row|
+          my_account    = account_for_name( import[:account_name] )
+          my_entry      = my_account.entry_for( Monetize.parse(row[:amount]) )
+          puts row[:date]
+          puts my_entry
+          puts "  #{row[:note]}"
+          their_account_name = account_prompt( "Which Account should be on the other side?" )
+          their_account      = account_for_name( their_account_name )
+          their_entry        = my_entry.paired_entry( their_account, row[:note] )
+          txn = Transaction.new( :entries => [my_entry, their_entry],
+                                 :date    => Date.parse( row[:date] ),
+                                 :payee   => 'Deposit')
+          validate_and_store_transaction( txn, row )
+        end
+      end
+    end
+
     def build_transactions
       imports.each_with_index do |import,import_idx|
         puts "Importing associated rows from #{import[:path]}"
         import_rows( import ).each_with_index do |row,row_idx|
-          db.transaction do
-            payee   = db[:payees][ :id => row[:payee_id] ]
-            if payee[:associated] then
-              my_account    = account_for_name( import[:account_name] )
-              other_account = db[:accounts][ :id => payee[:account_id] ]
+          payee   = db[:payees][ :id => row[:payee_id] ]
+          if payee[:associated] then
+            my_account    = account_for_name( import[:account_name] )
+            other_account = db[:accounts][ :id => payee[:account_id] ]
 
-              # Prompt for confirmation on this account and setup a menu if it
-              # isn't
-              my_entry    = my_account.entry_for( Monetize.parse(row[:amount]) )
-              puts my_entry
-              puts "  #{row[:note]}"
-              their_account_name = if agree("  Paired Account is: #{other_account[:name]}  ok? ") then
-                                     other_account[:name]
-                                   else
-                                     account_prompt( "Which Account should be on the other side?" )
-                                   end
+            # Prompt for confirmation on this account and setup a menu if it
+            # isn't
+            my_entry    = my_account.entry_for( Monetize.parse(row[:amount]) )
+            puts my_entry
+            puts "  #{row[:note]}"
+            their_account_name = if agree("  Paired Account is: #{other_account[:name]}  ok? ") then
+                                   other_account[:name]
+                                 else
+                                   account_prompt( "Which Account should be on the other side?" )
+                                 end
 
-              their_account = account_for_name( their_account_name )
-              their_entry    = my_entry.paired_entry( their_account, row[:note] )
-              txn = Transaction.new( :entries => [my_entry, their_entry],
-                                     :date    => Date.parse( row[:date] ),
-                                     :payee   => payee[:name] )
-
-              if txn.valid? then
-                puts txn.to_s
-                if agree( "Does this transaction look good? " ) then
-                  save_txn_to_db( txn, payee, row )
-                else
-                  puts "Okay, we'll come back to it later"
-                end
-              else
-                puts "Transaction is not valid!"
-              end
-            else
-              #puts "Skipping #{row.inspect} for now"
-              next
-            end
+            their_account = account_for_name( their_account_name )
+            their_entry    = my_entry.paired_entry( their_account, row[:note] )
+            txn = Transaction.new( :entries => [my_entry, their_entry],
+                                   :date    => Date.parse( row[:date] ),
+                                   :payee   => payee[:name] )
+            validate_and_store_transaction( txn,row )
+          else
+            #puts "Skipping #{row.inspect} for now"
+            next
           end
+        end
+      end
+    end
+
+    def validate_and_store_transaction( txn,row )
+      db.transaction do
+        payee = db[:payees][ :name => txn.payee ]
+        if txn.valid? then
+          puts txn.to_s
+          if agree( "Does this transaction look good? " ) then
+            save_txn_to_db( txn, payee, row )
+          else
+            puts "Okay, we'll come back to it later"
+          end
+        else
+          puts "Transaction is not valid!"
         end
       end
     end
@@ -80,13 +106,13 @@ module Tbar
     private
 
 
-    def account_prompt( prompt )
+    def account_prompt( prompt, names = chart.accounts_by_name.keys )
       new_name = nil
       choose do |menu|
         menu.index  = :number
         menu.prompt = prompt
-        by_name     = chart.accounts_by_name
-        menu.choices( *by_name.keys.sort.map { |s| s.strip } ) do |name|
+        #by_name     = chart.accounts_by_name
+        menu.choices( *names.sort.map { |s| s.strip } ) do |name|
           puts "Using #{name} instead"
           new_name = name
         end
