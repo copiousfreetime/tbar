@@ -6,7 +6,7 @@
 
 ## DESCRIPTION
 
- FIXME
+A personal / small business accounting thing
 
 ## FEATURES
 
