@@ -12,17 +12,17 @@ the accounts are classified into the following five types:
 
 * assets
 * liabilities
-* income/revenue
+* revenue
 * expenses
-* equity/capital
+* equity
 
 |                | Increase | Decrease |
 |----------------|----------|----------|
 | Asset          | Debit    | Credit   |
 | Liability      | Credit   | Debit    |
-| Income/Revenue | Credit   | Debit    |
+| Revenue        | Credit   | Debit    |
 | Expense        | Debit    | Credit   |
-| Equity/Capital | Credit   | Debit    |
+| Equity         | Credit   | Debit    |
 
 # Equations
 
@@ -52,7 +52,7 @@ All accounts in this subsection are 'payable'
 
 Capital, drawings, common stock, accumulated funds, etc.
 
-## Income/Revenue
+## Revenue
 
 Services rendered, sales, interest income, membership fees, rent income,
 interest from investment, recurring receivables, etc.
@@ -83,7 +83,7 @@ debts, stationery, entertainment, honorarium, rent, fuel, etc.
 
 ## Transaction - group of postings
 * Date
-* Payee / Description - entitiy external to the charts owner that is part of the
+* Payee / Description - entity external to the charts owner that is part of the
   transaction
 * State (cleared, pending, uncleared)
 * Note
@@ -112,6 +112,7 @@ debts, stationery, entertainment, honorarium, rent, fuel, etc.
 * Name / Description
 * Type - Asset, Liability, Equity, Expenese, Revenue
 * Cash Account Y/N
+* Control Account
 * Balance Sheet Account Y/N - mutual exclusive with P&L account
 * Profit & Loss Account Y/N
 
@@ -134,5 +135,5 @@ debts, stationery, entertainment, honorarium, rent, fuel, etc.
 * breakdown of debit
 
 ## Cash Flow
-* evaluate from cash accounts - broken down by where the transaction went
+* inflows / outflows
 

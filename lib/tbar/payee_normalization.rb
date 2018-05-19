@@ -30,7 +30,7 @@ module Tbar
       db[:payees].where( :associated => true, :account_id => nil ).each do |row|
         choose do |menu|
           menu.index  = :number
-          menu.prompt = "What Account should be the default associated withe #{row[:name]}"
+          menu.prompt = "What Account should be the default associated with #{row[:name]}"
           by_name     = chart.accounts_by_name
           menu.choices( *by_name.keys.sort.map { |s| s.strip } ) do |name|
             account_id = db[:accounts][:name => name][:id]

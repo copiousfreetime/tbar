@@ -2,8 +2,8 @@ require 'tbar/errors'
 require 'tbar/debit'
 require 'tbar/credit'
 module Tbar
-  # Public: Transation represents all the data about moving a an amount from one
-  # account to another. 
+  # Public: Transation represents all the data about moving an amount from one
+  # account to another.
   #
   # A Transaction must have at least 1 debit and 1 credit entry, and the sum of
   # the ammounts of the credits and the amount of the ammounts of the credits must
