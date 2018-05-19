@@ -27,7 +27,6 @@ module Tbar
 
     def clear
       current.keys.each do |k|
-        next if k == :__recursive_key__
         delete( k )
       end
     end

@@ -12,7 +12,7 @@ module Tbar
     end
 
     def test_keys
-      assert_equal [:__recursive_key__], @local.keys
+      assert_equal [], @local.keys
     end
 
     def test_has_key
@@ -55,7 +55,7 @@ module Tbar
       @local[:baz] = "wibble"
       assert_equal( before+2, @local.keys.size )
       @local.clear
-      assert_equal 1, @local.keys.size
+      assert_equal 0, @local.keys.size
       refute @local.key?( :foo )
       refute @local.key?( :baz )
     end
