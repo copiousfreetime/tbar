@@ -14,8 +14,8 @@ module Tbar
     def call
       normalize_payees
       process_deposits
-      #process_transfers
-      #build_transactions
+      process_transfers
+      build_transactions
     end
 
     private 
@@ -29,6 +29,59 @@ module Tbar
       Tbar::ChartOfAccounts.new.tap do |chart|
         db[:accounts].select(:name).each do |row|
           chart.add_account( row[:name] )
+        end
+      end
+    end
+
+    def process_transfers
+      puts "Processing transfer entries"
+      skipping = []
+      next_transfer_rows.each do |row|
+        next if skipping.include?( row[:row_id] )
+        puts "#{row[:row_id]} -- #{row[:date]} -- #{row[:amount]} -- #{row[:account_name]}"
+        puts "  #{row[:note]}"
+        other_row = nil
+
+        choose do |menu|
+          menu.index  = :number
+          menu.prompt = "What is the other side of this transaction"
+          next_rows = next_transfer_rows(8, row[:amount]).to_a
+          puts "Got rows #{next_rows.size}"
+
+          next_rows.each do |option|
+            next if option[:row_id] == row[:row_id]
+            s = "#{option[:row_id]} - #{option[:date]} - #{option[:amount]} - #{option[:account_name]} - #{option[:note]}"
+            menu.choice( s ) do |r|
+              other_row = option
+            end
+          end
+          menu.choice( "Skip" ) { |r| skipping << row[:row_id] ; other_row = nil }
+        end
+
+        next unless other_row
+
+        txn = create_txn_from_rows( row, other_row )
+        puts txn.to_s
+        if agree( "Does this transaction look good? " ) then
+          payee  = db[:payees][ :name => 'Transfer' ]
+          txn_id = db[:transactions].insert( :payee_id => payee[:id], :note => txn.note, :date => txn.date )
+          txn.entries.each do |entry|
+            account_id = db[:accounts][ :name => entry.account.real_name ][:id]
+            entry_id   = db[:entries].insert( :transaction_id => txn_id, :account_id => account_id,
+                                   :amount => entry.amount.cents, :note => entry.note,
+                                   :type   => entry.type.to_s )
+            row_id = case entry.note
+                     when row[:note]
+                       row[:row_id]
+                     when other_row[:note]
+                       other_row[:row_id]
+                     else
+                       raise ArgumentError, "Unable to find row matching #{entry.note}"
+                     end
+            db[:import_rows].where( :id => row_id ).update( :entry_id => entry_id )
+          end
+        else
+          puts "Okay, we'll come back to it later"
         end
       end
     end
@@ -121,6 +174,21 @@ module Tbar
       return new_name
     end
 
+    def create_txn_from_rows( row1, row2 )
+      account1_name  = row1[:account_name]
+      account1       = account_for_name( account1_name )
+      entry1         = account1.entry_for( Monetize.parse( row1[:amount] ), row1[:note] )
+
+      account2_name  = row2[:account_name]
+      account2       = account_for_name( account2_name )
+      entry2         = entry1.paired_entry( account2, row2[:note] )
+
+      transfer       = Transaction.new( :entries => [entry1, entry2],
+                                        :date   => Date.parse( row1[:date] ),
+                                        :payee  => 'Transfer' )
+      return transfer
+    end
+
     def save_txn_to_db( txn, payee, row )
       txn_id = db[:transactions].insert( :payee_id => payee[:id], :note => txn.note, :date => txn.date )
       txn.entries.each do |entry|
@@ -160,6 +228,54 @@ module Tbar
 
     def transfer_rows( import )
       payee_rows( import, 'Transfer' )
+    end
+
+    def next_transfer_rows( limit = nil, amount = nil )
+      sql = <<-SQL
+        SELECT row.id      AS row_id
+              ,row.date    AS date
+              ,row.note    AS note
+              ,row.amount  AS amount
+              ,to_p.payee_id AS payee_id
+              ,i.account_name      AS account_name
+         FROM import_rows AS row
+         JOIN to_payees   AS to_p
+           ON row.note = to_p.description
+         JOIN payees      AS p
+           ON to_p.payee_id = p.id
+         JOIN imports   AS i
+           ON i.id = row.import_id
+        WHERE p.name = 'Transfer'
+          AND row.entry_id IS NULL
+      SQL
+      if amount then
+        amount = amount.tr('-$',' ').strip
+        amount = "%#{amount}%"
+        sql << "AND row.amount like '#{amount}'"
+      end
+      sql << "ORDER BY row.date ASC"
+      db[sql].limit( limit )
+    end
+
+    def transfer_matching_amount( amount )
+      wild_amount = "%#{amount}%"
+      sql = <<-SQL
+        SELECT row.id      AS row_id
+              ,row.date    AS date
+              ,row.note    AS note
+              ,row.amount  AS amount
+              ,to_p.payee_id AS payee_id
+         FROM import_rows AS row
+         JOIN to_payees   AS to_p
+           ON row.note = to_p.description
+         JOIN payees      AS p
+           on to_p.payee_id = p.id
+        WHERE row.entry_id IS NULL
+          And p.name = 'Transfer'
+          AND row.amount ilike ?
+      ORDER BY row.date ASC
+      SQL
+      db[sql, wild_amount ].to_enum
     end
 
     def payee_rows( import, payee )
